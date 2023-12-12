@@ -1,2 +1,2 @@
 # PokedexPMDM
-Creating a Pokédex syep by step
+Creating a Pokédex step by step
