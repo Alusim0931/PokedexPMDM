@@ -24,12 +24,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.pokedex2.ui.theme.AtkColor
+import com.example.pokedex2.ui.theme.DefColor
+import com.example.pokedex2.ui.theme.HPColor
+import com.example.pokedex2.ui.theme.SpAtkColor
+import com.example.pokedex2.ui.theme.SpDefColor
+import com.example.pokedex2.ui.theme.SpdColor
+import com.example.pokedexmvvm.dto.Sprites
+import com.example.pokedexmvvm.viewmodel.PokemonViewModel
 import kotlin.random.Random
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VisualDitto() {
+fun VisualDitto(pokemonViewModel: PokemonViewModel) {
     var expanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
@@ -66,7 +74,7 @@ fun VisualDitto() {
                 .animateContentSize(), // Aplicar animación al tamaño del Card
             shape = RoundedCornerShape(16.dp),
         ) {
-            ImageDitto()
+            ImageDitto(pokemonSprite = pokemonViewModel.pokemonSprite.value)
         }
 
         // Texto del tipo (Normal)
@@ -78,40 +86,47 @@ fun VisualDitto() {
             color = Color.Black // Cambia Color.White al color de texto que desees
         )
 
-        Stadistics()
+        Stadistics(pokemonViewModel = pokemonViewModel)
     }
 }
 
 @Composable
-fun Stadistics() {
+fun Stadistics(pokemonViewModel: PokemonViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        PokemonStatsBar("HP", Random.nextInt(256), Color.Red)
-        PokemonStatsBar("Atk", Random.nextInt(256), Color.Green)
-        PokemonStatsBar("Def", Random.nextInt(256), Color.Blue)
-        PokemonStatsBar("Sp. Atk", Random.nextInt(256), Color.Yellow)
-        PokemonStatsBar("Sp. Def", Random.nextInt(256), Color.Magenta)
-        PokemonStatsBar("Speed", Random.nextInt(256), Color.Cyan)
+        pokemonViewModel.pokemonStats.value?.forEach { stat ->
+            PokemonStatsBar(statName = stat.stat.name, statValue = stat.base_stat)
+        }
     }
 }
 
 @Composable
-fun PokemonStatsBar(statName: String, statValue: Int, barColor: Color) {
+fun PokemonStatsBar(statName: String, statValue: Int) {
     val maxValue = 255
 
     val percentage = (statValue / maxValue.toFloat()) * 100
+
+    val color = when (statName) {
+        "HP" -> HPColor
+        "Atk" -> AtkColor
+        "Def" -> DefColor
+        "Sp. Atk" -> SpAtkColor
+        "Sp. Def" -> SpDefColor
+        "Speed" -> SpdColor
+        else -> Color.Gray // Otra opción predeterminada
+    }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
             .padding(2.dp)
-            .background(barColor, RoundedCornerShape(8.dp))
+            .background(color, RoundedCornerShape(8.dp))
     ) {
-        val progressBarWidth = with(LocalDensity.current) { (percentage / 100f) * 200.dp.toPx() } // Ajusta el valor 200.dp según sea necesario
+        val progressBarWidth = with(LocalDensity.current) { (percentage / 100f) * 200.dp.toPx() }
 
         LinearProgressIndicator(
             progress = percentage,
@@ -119,7 +134,7 @@ fun PokemonStatsBar(statName: String, statValue: Int, barColor: Color) {
                 .fillMaxHeight()
                 .width(progressBarWidth.dp)
                 .padding(2.dp),
-            color = Color.Transparent // Establecer el color de la barra de progreso como transparente
+            color = Color.Transparent
         )
 
         Text(
@@ -144,7 +159,7 @@ fun PokemonStatsBar(statName: String, statValue: Int, barColor: Color) {
 }
 
 @Composable
-fun ImageDitto() {
+fun ImageDitto(pokemonSprite: Sprites?) {
     Image(
         painterResource(id = R.drawable.ditto),
         contentDescription = "Null",
@@ -153,3 +168,4 @@ fun ImageDitto() {
             .clip(shape = RoundedCornerShape(16.dp))
     )
 }
+

@@ -15,7 +15,10 @@ import androidx.lifecycle.ViewModel
 import com.example.pokedexmvvm.model.PokemonTypeProvider
 import com.example.pokedexmvvm.ui.theme.PokedexMVVMTheme
 import com.example.pokedexmvvm.viewmodel.PokemonViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +30,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val pokemon_viewmodel: PokemonViewModel by viewModels()
-
-                //VisualDitto()
+                VisualDitto(pokemon_viewmodel)
                 }
             }
         }

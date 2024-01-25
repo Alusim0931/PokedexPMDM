@@ -68,11 +68,13 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("com.google.code.gson:gson:2.10")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
 
 
     val hiltVersion = "2.48.1"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
-    implementation("com.google.dagger:hilt")
+
+    //implementation("com.google.dagger:hilt")
     
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
