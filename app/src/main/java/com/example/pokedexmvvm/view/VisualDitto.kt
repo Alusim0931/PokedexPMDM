@@ -1,20 +1,13 @@
 package com.example.pokedexmvvm
 
-import android.annotation.SuppressLint
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,74 +23,20 @@ import com.example.pokedex2.ui.theme.HPColor
 import com.example.pokedex2.ui.theme.SpAtkColor
 import com.example.pokedex2.ui.theme.SpDefColor
 import com.example.pokedex2.ui.theme.SpdColor
-import com.example.pokedexmvvm.dto.Sprites
+import com.example.pokedex2.ui.theme.TypesColor
+import com.example.pokedexmvvm.dto.Pokemon
 import com.example.pokedexmvvm.viewmodel.PokemonViewModel
-import kotlin.random.Random
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun VisualDitto(pokemonViewModel: PokemonViewModel) {
-    var expanded by remember { mutableStateOf(false) }
-
-    LaunchedEffect(true) {
-        expanded = true // Expandir automáticamente al inicio
-    }
-
-    Column {
-        // TopAppBar
-        Surface(shadowElevation = 3.dp, modifier = Modifier.background(color = Color.Red)) {
-            TopAppBar(
-                title = {
-                    Row {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = null,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                        Text(
-                            modifier = Modifier.padding(8.dp),
-                            text = "Pokédex"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(Color.Red)
-            )
-        }
-
-        // Imagen dentro del Card
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(16.dp)
-                .animateContentSize(), // Aplicar animación al tamaño del Card
-            shape = RoundedCornerShape(16.dp),
-        ) {
-            ImageDitto(pokemonSprite = pokemonViewModel.pokemonSprite.value)
-        }
-
-        // Texto del tipo (Normal)
-        Text(
-            text = "Normal",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            color = Color.Black // Cambia Color.White al color de texto que desees
-        )
-
-        Stadistics(pokemonViewModel = pokemonViewModel)
-    }
-}
 
 @Composable
 fun Stadistics(pokemonViewModel: PokemonViewModel) {
+    val pokemon by pokemonViewModel.pokemon.observeAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        pokemonViewModel.pokemonStats.value?.forEach { stat ->
+        pokemon?.stats?.forEach { stat ->
             PokemonStatsBar(statName = stat.stat.name, statValue = stat.base_stat)
         }
     }
@@ -159,7 +98,8 @@ fun PokemonStatsBar(statName: String, statValue: Int) {
 }
 
 @Composable
-fun ImageDitto(pokemonSprite: Sprites?) {
+fun ImageDitto(pokemonViewModel: PokemonViewModel) {
+    val pokemon by pokemonViewModel.pokemon.observeAsState()
     Image(
         painterResource(id = R.drawable.ditto),
         contentDescription = "Null",
@@ -169,3 +109,34 @@ fun ImageDitto(pokemonSprite: Sprites?) {
     )
 }
 
+@Composable
+fun PokemonTypes(pokemonViewModel: PokemonViewModel) {
+    val pokemon by pokemonViewModel.pokemon.observeAsState()
+
+    val types = pokemon?.types
+
+    if (types?.isNotEmpty() == false) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            for (type in types) {
+                Text(
+                    text = type.type.name,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        //.background(getTypeColor(type.type.name), RoundedCornerShape(16.dp))
+                        .padding(8.dp),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun measurement(pokemonViewModel: PokemonViewModel) {
+    // Do something with the Pokemon object if needed
+}

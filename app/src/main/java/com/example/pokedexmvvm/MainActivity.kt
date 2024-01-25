@@ -11,9 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import com.example.pokedexmvvm.model.PokemonTypeProvider
 import com.example.pokedexmvvm.ui.theme.PokedexMVVMTheme
+import com.example.pokedexmvvm.view.VisualDitto
 import com.example.pokedexmvvm.viewmodel.PokemonViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
@@ -29,8 +31,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val pokemon_viewmodel: PokemonViewModel by viewModels()
-                VisualDitto(pokemon_viewmodel)
+                    val pokemon_viewmodel: PokemonViewModel = hiltViewModel()
+                    VisualDitto(pokemon_viewmodel)
                 }
             }
         }

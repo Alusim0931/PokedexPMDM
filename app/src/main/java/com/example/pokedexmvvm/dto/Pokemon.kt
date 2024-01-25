@@ -1,6 +1,7 @@
 package com.example.pokedexmvvm.dto
 
 import kotlinx.coroutines.awaitAll
+import javax.inject.Inject
 
 data class Pokemon(
     val abilities: List<Ability>,
