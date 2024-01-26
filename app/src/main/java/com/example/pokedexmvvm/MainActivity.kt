@@ -3,7 +3,6 @@ package com.example.pokedexmvvm
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,13 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import com.example.pokedexmvvm.model.PokemonTypeProvider
 import com.example.pokedexmvvm.ui.theme.PokedexMVVMTheme
-import com.example.pokedexmvvm.view.VisualDitto
-import com.example.pokedexmvvm.viewmodel.PokemonViewModel
+import com.example.pokedexmvvm.ui.screens.VisualDitto
+import com.example.pokedexmvvm.ui.viewmodels.PokemonViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
