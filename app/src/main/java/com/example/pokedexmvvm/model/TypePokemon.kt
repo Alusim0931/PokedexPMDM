@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 data class PokemonType(val typeName: String, val colors: List<Color>)
 
+/*
 object PokemonTypeProvider {
     object PokemonTypeProvider {
         val normalType =
@@ -88,4 +89,4 @@ object PokemonTypeProvider {
             listOf(Color(0xFFFF4081), Color.White, Color(0xFFF50057), Color(0xFFFF80AB))
         )
     }
-}
+}*/

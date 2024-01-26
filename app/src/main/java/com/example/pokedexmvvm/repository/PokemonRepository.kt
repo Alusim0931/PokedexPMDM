@@ -10,4 +10,6 @@ class PokemonRepository @Inject constructor(val datasource: LocalDataPokemonSour
     fun getPokemon(): Pokemon {
         return datasource.getPokemonJson("ditto.json")
     }
+
+
 }

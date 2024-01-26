@@ -29,6 +29,10 @@ class PokemonViewModel @Inject constructor(val pokemonRepository: PokemonReposit
     }
 
     val pokemon: LiveData<Pokemon> = _pokemon
+
+
+
+
 }
 
 
