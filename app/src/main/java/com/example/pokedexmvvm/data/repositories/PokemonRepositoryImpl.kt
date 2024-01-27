@@ -11,11 +11,12 @@ import javax.inject.Inject
 class PokemonDetailRepositoryImpl @Inject constructor(val PokemonLocaldatasource: LocalDataPokemonSource): IPokemonDetailRepository {
 
     override suspend fun getPokemonData(name: String): Pokemon {
-        val pokemonDTO = PokemonLocaldatasource.getPokemonJson("ditto.json")
+        val pokemonDTO: PokemonDTO = PokemonLocaldatasource.getPokemonJson("ditto.json")
         return revertPokemon(pokemonDTO)
     }
 
    fun revertPokemon(pokemonDTO: PokemonDTO): Pokemon {
         return PokemonDataMapper.TransformPokemonfromDTO(pokemonDTO)
     }
+
 }

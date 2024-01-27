@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pokedexmvvm.ui.theme.PokedexMVVMTheme
 import com.example.pokedexmvvm.ui.screens.VisualDitto
+import com.example.pokedexmvvm.ui.viewmodels.PokemonListViewModel
 import com.example.pokedexmvvm.ui.viewmodels.PokemonViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,8 +28,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val pokemon_viewmodel: PokemonViewModel = hiltViewModel()
-                    VisualDitto(pokemon_viewmodel)
+                    val pokemonDetailviewmodel: PokemonViewModel = hiltViewModel()
+                    val pokemonListviewmodel: PokemonListViewModel = hiltViewModel()
+                    VisualDitto(pokemonDetailviewmodel)
                 }
             }
         }

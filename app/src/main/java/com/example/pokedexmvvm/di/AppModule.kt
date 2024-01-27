@@ -1,5 +1,17 @@
 package com.example.pokedexmvvm.di
 
+import com.example.pokedexmvvm.data.sources.remote.PokeApiService
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.internal.GsonBuildConfig
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
+
 /*@Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -17,3 +29,29 @@ object AppModule {
     }
 
 }*/
+
+
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return GsonBuilder()
+            .setLenient()
+            .create()
+    }
+    @Provides
+    @Singleton
+    fun provideRetrofit(gson: Gson): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://pokeapi.co/api/v2/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+    @Provides
+    @Singleton
+    fun providePokemonService(retrofit: Retrofit): PokeApiService {
+        return retrofit.create(PokeApiService::class.java)
+    }
+}

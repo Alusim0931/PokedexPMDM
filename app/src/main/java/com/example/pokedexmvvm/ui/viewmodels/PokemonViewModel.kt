@@ -21,16 +21,13 @@ class PokemonViewModel @Inject constructor(private val useCase: GetPokemonDatail
 
     val pokemonDTO: MutableLiveData<Pokemon?> = _pokemonDTO
 
-    private suspend fun initialized(name: String) {
+     fun initialized(name: String) {
         viewModelScope.launch {
             _pokemonDTO.postValue(withContext(Dispatchers.IO) {
                 useCase.getPokemonDetail(name)
             })
         }
     }
-
-
-
 }
 
 
