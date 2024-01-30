@@ -11,8 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.pokedexmvvm.ui.screens.PokemonDetailScreen
+import com.example.pokedexmvvm.ui.screens.PokemonListScreen
 import com.example.pokedexmvvm.ui.theme.PokedexMVVMTheme
-import com.example.pokedexmvvm.ui.screens.VisualDitto
 import com.example.pokedexmvvm.ui.viewmodels.PokemonListViewModel
 import com.example.pokedexmvvm.ui.viewmodels.PokemonViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,11 +34,27 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val pokemonDetailviewmodel: PokemonViewModel = hiltViewModel()
                     val pokemonListviewmodel: PokemonListViewModel = hiltViewModel()
-                    VisualDitto(pokemonDetailviewmodel)
+                    //VisualDitto(pokemonDetailviewmodel)
+                    val navController = rememberNavController()
+
+                    NavHost(navController = navController, startDestination = "PokemonListScreen") {
+
+                        composable("PokemonListScreen") {
+                            PokemonListScreen(
+                                pokemonListviewmodel,
+                                pokemonDetailviewmodel ,
+                                 navController) }
+                        composable("PokemonDetailScreen"){
+                            PokemonDetailScreen(
+                                pokemonDetailviewmodel,
+                                navController)
+                        }
+                    }
                 }
             }
         }
     }
+
 }
 
 @Composable

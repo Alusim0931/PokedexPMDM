@@ -24,8 +24,8 @@ import com.example.pokedex2.ui.theme.TypesColor
 import com.example.pokedexmvvm.R
 import com.example.pokedexmvvm.data.sources.remote.DTO.Stat
 import com.example.pokedexmvvm.data.sources.remote.DTO.Type
-import com.example.pokedexmvvm.ui.viewmodels.PokemonViewModel
 import coil.compose.AsyncImage
+import com.example.pokedexmvvm.data.sources.remote.DTO.Sprites
 
 @Composable
 fun Stadistics(stats: List<Stat>) {
@@ -45,13 +45,13 @@ fun PokemonStatsBar(statName: String, statValue: Int) {
 
     val percentage = (statValue / maxValue.toFloat()) * 100
 
-    val color = when (statName) {
-        "HP" -> HPColor
-        "Atk" -> AtkColor
-        "Def" -> DefColor
-        "Sp. Atk" -> SpAtkColor
-        "Sp. Def" -> SpDefColor
-        "Speed" -> SpdColor
+    val barColor = when (statName) {
+        "hp" -> HPColor
+        "attack" -> AtkColor
+        "defense" -> DefColor
+        "special-attack" -> SpAtkColor
+        "special-defense" -> SpDefColor
+        "speed" -> SpdColor
         else -> Color.Gray
     }
 
@@ -60,8 +60,18 @@ fun PokemonStatsBar(statName: String, statValue: Int) {
             .fillMaxWidth()
             .height(40.dp)
             .padding(2.dp)
-            .background(color, RoundedCornerShape(8.dp))
+            .background(barColor, RoundedCornerShape(8.dp))
     ) {
+        val progressBarColor = when (statName) {
+            "hp" -> HPColor
+            "attack" -> AtkColor
+            "defense" -> DefColor
+            "special-attack" -> SpAtkColor
+            "special-defense" -> SpDefColor
+            "speed" -> SpdColor
+            else -> Color.Gray
+        }
+
         val progressBarWidth = with(LocalDensity.current) { (percentage / 100f) * 200.dp.toPx() }
 
         LinearProgressIndicator(
@@ -70,7 +80,7 @@ fun PokemonStatsBar(statName: String, statValue: Int) {
                 .fillMaxHeight()
                 .width(progressBarWidth.dp)
                 .padding(2.dp),
-            color = Color.Transparent
+            color = Color.Transparent // Hacer la barra de progreso transparente
         )
 
         Text(
@@ -95,7 +105,7 @@ fun PokemonStatsBar(statName: String, statValue: Int) {
 }
 
 @Composable
-fun ImageDitto(pokemonViewModel: PokemonViewModel) {
+fun ImagePokemon(sprites: Sprites) {
     Image(
         painterResource(id = R.drawable.ditto),
         contentDescription = "Null",
@@ -103,32 +113,74 @@ fun ImageDitto(pokemonViewModel: PokemonViewModel) {
             .fillMaxSize()
             .clip(shape = RoundedCornerShape(16.dp))
     )
+    AsyncImage(
+        model = sprites.front_default ,
+        contentDescription = "ImagenPokemon",
+        modifier = Modifier
+            .fillMaxSize()
+    )
+
 }
 
 @Composable
 fun PokemonTypes(types: List<Type>) {
-
-
     if (types.isNotEmpty()) {
-        Row(
+        Column(
             modifier = Modifier
+                .fillMaxWidth()
+                .padding(1.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            for (type in types) {
+            if (types.size == 1) {
+                // Pokemon con un solo tipo
+                val type = types.first()
                 val typeColor = TypesColor.find { it.name == type.type.name }
-                val textColor = typeColor?.color ?: Color.Black
+                val boxColor = typeColor?.color ?: Color.Gray
 
-                Text(
-                    text = type.type.name,
+                Box(
                     modifier = Modifier
-                        .padding(end = 8.dp)
-                        .padding(8.dp),
-                    color = textColor,
-                    fontWeight = FontWeight.Bold
-                )
+                        .background(color = boxColor, shape = RoundedCornerShape(8.dp))
+                        .padding(4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = type.type.name,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(6.dp)
+                    )
+                }
+            } else if (types.size == 2) {
+                // Pokemon con doble tipo
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    for (type in types) {
+                        val typeColor = TypesColor.find { it.name == type.type.name }
+                        val boxColor = typeColor?.color ?: Color.Gray
+
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .background(color = boxColor, shape = RoundedCornerShape(8.dp))
+                                .padding(0.dp)
+                        ) {
+                            Text(
+                                text = type.type.name,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
+
 @Composable
 fun PokemonHeight(height: Float?) {
     Column(
@@ -179,7 +231,9 @@ fun PokemonName(name: String) {
             .fillMaxWidth()
             .padding(1.dp),
         color = Color.Black,
+        textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp
     )
 }
+

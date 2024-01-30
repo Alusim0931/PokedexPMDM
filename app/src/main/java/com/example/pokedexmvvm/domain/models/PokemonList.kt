@@ -1,5 +1,5 @@
 package com.example.pokedexmvvm.domain.models
 
 class PokemonList (
-    val pokemonDTOSList: List<Pokemon>
+    val pokemonDTOSList: List<String>
 )

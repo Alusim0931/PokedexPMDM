@@ -1,6 +1,6 @@
 package com.example.pokedexmvvm.ui.screens
 
-import ImageDitto
+import ImagePokemon
 import PokemonHeight
 import PokemonName
 import PokemonTypes
@@ -8,9 +8,11 @@ import PokemonWeight
 import Stadistics
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,76 +37,86 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.pokedexmvvm.ui.viewmodels.PokemonViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VisualDitto(pokemonViewModel: PokemonViewModel) {
-    pokemonViewModel.initialized("ditto.json")
+fun PokemonDetailScreen(pokemonViewModel: PokemonViewModel, navController: NavController) {
+    //pokemonViewModel.initialized("ditto.json")
     var expanded by remember { mutableStateOf(false) }
 
     val pokemon by pokemonViewModel.pokemonDTO.observeAsState()
     LaunchedEffect(true) {
         expanded = true
     }
+    if (pokemon != null) {
+        Column {
+            // TopAppBar
+            Surface(shadowElevation = 3.dp, modifier = Modifier.background(color = Color.Red)) {
+                TopAppBar(
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row {
+                                Icon(
+                                    Icons.Default.ArrowBack,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .clickable { navController.navigate("PokemonListScreen") }
+                                )
+                                Text(
+                                    modifier = Modifier.padding(8.dp),
+                                    text = "Pokédex"
+                                )
+                            }
 
-    Column {
-        // TopAppBar
-        Surface(shadowElevation = 3.dp, modifier = Modifier.background(color = Color.Red)) {
-            TopAppBar(
-                title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                contentDescription = null,
-                                modifier = Modifier.padding(8.dp)
-                            )
-                            Text(
-                                modifier = Modifier.padding(8.dp),
-                                text = "Pokédex"
-                            )
+                            pokemon?.let {
+                                Text(
+                                    text = "# ${it.id}", // Si it es null, muestra "N/A"
+                                    modifier = Modifier
+                                        .padding(90.dp)
+                                        .weight(1f),
+                                    color = Color.White
+                                )
+                            }
                         }
-
-                        pokemon?.let {
-                            Text(
-                                text = "# ${it.id}", // Si it es null, muestra "N/A"
-                                modifier = Modifier
-                                    .padding(90.dp)
-                                    .weight(1f),
-                                color = Color.White
-                            )
-                        }
-                    }
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(Color.Red)
-            )
-        }
-
-        // Card con la imagen de Ditto
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(16.dp)
-                .animateContentSize(),
-            shape = RoundedCornerShape(16.dp),
-        ) {
-            Column {
-                ImageDitto(pokemonViewModel)
+                    },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(Color.Red)
+                )
             }
-        }
-        pokemon?.let {
-            PokemonName(it.name)
-        }
-        pokemon?.let { Stadistics(it.stats) }
-        pokemon?.let { PokemonTypes(it.types) }
-        pokemon?.let { PokemonHeight(it.height) }
-        pokemon?.let { PokemonWeight(it.weight) }
 
+            // Card con la imagen de Ditto
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(16.dp)
+                    .animateContentSize(),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Column {
+                    //pokemon?.let { ImagePokemon(it.sprite) }
+                    AsyncImage(model = pokemon!!.sprite.front_default,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .fillMaxSize())
+
+                }
+            }
+            pokemon?.let {
+                PokemonName(it.name)
+
+            }
+            pokemon?.let { PokemonTypes(it.types) }
+            pokemon?.let { Stadistics(it.stats) }
+            pokemon?.let { PokemonHeight(it.height) }
+            pokemon?.let { PokemonWeight(it.weight) }
+        }
     }
 }
 

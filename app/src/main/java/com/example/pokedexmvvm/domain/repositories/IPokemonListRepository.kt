@@ -5,5 +5,5 @@ import com.example.pokedexmvvm.domain.models.Pokemon
 import com.example.pokedexmvvm.domain.models.PokemonList
 
 interface IPokemonListRepository {
-    suspend fun getPokemonList(): PokemonList
+    suspend fun getPokemonList(limit: Int): PokemonList
 }
