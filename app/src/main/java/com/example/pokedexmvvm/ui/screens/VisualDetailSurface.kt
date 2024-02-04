@@ -1,21 +1,17 @@
 package com.example.pokedexmvvm.ui.screens
 
-import ImagePokemon
-import PokemonHeight
-import PokemonName
-import PokemonTypes
-import PokemonWeight
-import Stadistics
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -39,18 +35,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.pokedexmvvm.ui.components.PokemonHeight
+import com.example.pokedexmvvm.ui.components.PokemonName
+import com.example.pokedexmvvm.ui.components.PokemonTypes
+import com.example.pokedexmvvm.ui.components.PokemonWeight
+import com.example.pokedexmvvm.ui.components.Stadistics
 import com.example.pokedexmvvm.ui.viewmodels.PokemonViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonDetailScreen(pokemonViewModel: PokemonViewModel, navController: NavController) {
-    //pokemonViewModel.initialized("ditto.json")
     var expanded by remember { mutableStateOf(false) }
 
     val pokemon by pokemonViewModel.pokemonDTO.observeAsState()
+
     LaunchedEffect(true) {
         expanded = true
     }
+
     if (pokemon != null) {
         Column {
             // TopAppBar
@@ -74,13 +76,12 @@ fun PokemonDetailScreen(pokemonViewModel: PokemonViewModel, navController: NavCo
                                     text = "Pokédex"
                                 )
                             }
+                            Spacer(modifier = Modifier.width(150.dp)) // Añadido espaciador
 
                             pokemon?.let {
                                 Text(
-                                    text = "# ${it.id}", // Si it es null, muestra "N/A"
-                                    modifier = Modifier
-                                        .padding(90.dp)
-                                        .weight(1f),
+                                    text = "# ${it.id}",
+                                    modifier = Modifier.padding(8.dp),
                                     color = Color.White
                                 )
                             }
@@ -90,7 +91,6 @@ fun PokemonDetailScreen(pokemonViewModel: PokemonViewModel, navController: NavCo
                 )
             }
 
-            // Card con la imagen de Ditto
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,18 +100,13 @@ fun PokemonDetailScreen(pokemonViewModel: PokemonViewModel, navController: NavCo
                 shape = RoundedCornerShape(16.dp),
             ) {
                 Column {
-                    //pokemon?.let { ImagePokemon(it.sprite) }
                     AsyncImage(model = pokemon!!.sprite.front_default,
                         contentDescription = "",
                         modifier = Modifier
                             .fillMaxSize())
-
                 }
             }
-            pokemon?.let {
-                PokemonName(it.name)
-
-            }
+            pokemon?.let { PokemonName(it.name) }
             pokemon?.let { PokemonTypes(it.types) }
             pokemon?.let { Stadistics(it.stats) }
             pokemon?.let { PokemonHeight(it.height) }
